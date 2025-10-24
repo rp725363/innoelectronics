@@ -1,5 +1,6 @@
 import csv
 import io
+import os
 import requests
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_mail import Mail, Message
@@ -217,4 +218,4 @@ sales.innoelectronics@gmail.com
     return redirect(url_for('contact'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3000)), debug=True)

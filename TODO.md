@@ -1,8 +1,5 @@
-# TODO: Enhance Home Page and Footer
+# TODO List for Adding Port Configuration and Pushing to Git
 
-- [x] Update Hero Section: Make text more inspiring and tech-oriented, add subtle animation or better CTA.
-- [x] Enhance Features Section: Refine descriptions to inspire tech enthusiasts.
-- [x] Add New Section: Introduce "Tech Insights" section with placeholders for inspiring content.
-- [x] Expand Footer: Add multiple columns (About Us, Quick Links, Contact Info, Social Media) with descriptive text and placeholders.
-- [x] Add Footer to All Pages: Add consistent footer to product.html, about.html, and contact.html with dark theme and animations.
-- [ ] Followup: Run Flask app to preview changes and test responsiveness.
+- [x] Edit app.py to add import os and modify app.run for port configuration (host='0.0.0.0', port=int(os.environ.get('PORT', 3000)), debug=True)
+- [ ] Commit changes to git with message "Add port configuration"
+- [ ] Push changes to git
