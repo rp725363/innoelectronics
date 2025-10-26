@@ -2,9 +2,10 @@ import csv
 import io
 import os
 import requests
-from flask import Flask, render_template, request, session, redirect, url_for, flash
+from flask import Flask, render_template, request, session, redirect, url_for, flash, Response
 from flask_mail import Mail, Message
 from collections import defaultdict
+from datetime import datetime
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'your_secret_key_here'  # Change this to a secure key
@@ -220,6 +221,54 @@ sales.innoelectronics@gmail.com
 @app.route('/google04f7938352655765.html')
 def google_verification():
     return 'google-site-verification: google04f7938352655765.html'
+
+@app.route('/sitemap.xml')
+def sitemap():
+    base_url = request.url_root.rstrip('/')
+    products = get_products_from_sheet()
+    lastmod = datetime.now().strftime('%Y-%m-%d')
+
+    # Start XML sitemap
+    sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    sitemap_xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+
+    # Static pages
+    static_pages = [
+        {'loc': '/', 'priority': '1.0', 'changefreq': 'daily'},
+        {'loc': '/about', 'priority': '0.8', 'changefreq': 'monthly'},
+        {'loc': '/contact', 'priority': '0.8', 'changefreq': 'monthly'},
+        {'loc': '/cart', 'priority': '0.5', 'changefreq': 'weekly'},
+    ]
+
+    for page in static_pages:
+        sitemap_xml += f'  <url>\n'
+        sitemap_xml += f'    <loc>{base_url}{page["loc"]}</loc>\n'
+        sitemap_xml += f'    <lastmod>{lastmod}</lastmod>\n'
+        sitemap_xml += f'    <changefreq>{page["changefreq"]}</changefreq>\n'
+        sitemap_xml += f'    <priority>{page["priority"]}</priority>\n'
+        sitemap_xml += f'  </url>\n'
+
+    # Category pages
+    for category in products.keys():
+        sitemap_xml += f'  <url>\n'
+        sitemap_xml += f'    <loc>{base_url}/products/{category}</loc>\n'
+        sitemap_xml += f'    <lastmod>{lastmod}</lastmod>\n'
+        sitemap_xml += f'    <changefreq>weekly</changefreq>\n'
+        sitemap_xml += f'    <priority>0.7</priority>\n'
+        sitemap_xml += f'  </url>\n'
+
+        # Product pages
+        for index in range(len(products[category])):
+            sitemap_xml += f'  <url>\n'
+            sitemap_xml += f'    <loc>{base_url}/product/{category}/{index}</loc>\n'
+            sitemap_xml += f'    <lastmod>{lastmod}</lastmod>\n'
+            sitemap_xml += f'    <changefreq>monthly</changefreq>\n'
+            sitemap_xml += f'    <priority>0.6</priority>\n'
+            sitemap_xml += f'  </url>\n'
+
+    sitemap_xml += '</urlset>\n'
+
+    return Response(sitemap_xml, mimetype='application/xml')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3000)), debug=True)
