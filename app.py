@@ -217,5 +217,9 @@ sales.innoelectronics@gmail.com
 
     return redirect(url_for('contact'))
 
+@app.route('/google04f7938352655765.html')
+def google_verification():
+    return 'google-site-verification: google04f7938352655765.html'
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3000)), debug=True)
