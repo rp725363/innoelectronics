@@ -222,6 +222,15 @@ sales.innoelectronics@gmail.com
 def google_verification():
     return 'google-site-verification: google04f7938352655765.html'
 
+@app.route('/robots.txt')
+def robots():
+    try:
+        with open('robots.txt', 'r') as f:
+            content = f.read()
+        return Response(content, mimetype='text/plain')
+    except FileNotFoundError:
+        return "File not found", 404
+
 @app.route('/sitemap.xml')
 def sitemap():
     base_url = request.url_root.rstrip('/')
