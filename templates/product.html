@@ -194,7 +194,7 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
           <img
-            src="https://res.cloudinary.com/dks3wmj5e/image/upload/v1758458435/Logo1_mrhhfw.png"
+            src="/static/images/logo_optimized.jpg"
             alt="Innoelectronics Logo"
             style="height: 40px; margin-right: 10px"
           />
@@ -285,8 +285,39 @@
             <p class="text-muted mb-3">Category: {{ category.title() }}</p>
             {% if product.id %}
             <p class="text-muted mb-3">Product ID: {{ product.id }}</p>
+            {% endif %} {% if product.price %}
+            <p
+              class="mb-3"
+              style="font-size: 1.5rem; font-weight: bold; color: #00e676"
+            >
+              Price: ₹{{ product.price }}
+            </p>
             {% endif %}
-            <p class="mb-4">{{ product.description }}</p>
+            <p
+              class="mb-4"
+              style="
+                font-size: 0.9rem;
+                color: #ccc;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+              "
+            >
+              {{ product.description }}
+            </p>
+            {% if product.datasheet %}
+            <p class="mb-3">
+              <a
+                href="{{ product.datasheet }}"
+                target="_blank"
+                class="btn btn-outline-light btn-sm"
+                >View Datasheet</a
+              >
+            </p>
+            {% endif %} {% if product.stock %}
+            <p class="mb-3" style="color: #00e676">
+              Stock: {{ product.stock }}
+            </p>
+            {% endif %}
             <form action="/add_to_cart" method="post" class="d-inline">
               <input type="hidden" name="category" value="{{ category }}" />
               <input type="hidden" name="index" value="{{ index }}" />

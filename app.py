@@ -36,7 +36,10 @@ def get_products_from_sheet():
                 'id': row.get('id', ''),
                 'name': row.get('name', ''),
                 'description': row.get('Description', ''),
-                'image': row.get('imageUrl', '')
+                'image': row.get('imageUrl', ''),
+                'price': row.get('price', ''),
+                'datasheet': row.get('datasheetUrl', ''),
+                'stock': row.get('stock', '')
             })
     return dict(products)
 
