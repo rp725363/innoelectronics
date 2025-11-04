@@ -2,6 +2,8 @@ import csv
 import io
 import os
 import requests
+import threading
+import logging
 from flask import Flask, render_template, request, session, redirect, url_for, flash, Response
 from flask_mail import Mail, Message
 from collections import defaultdict
@@ -19,6 +21,18 @@ app.config['MAIL_PASSWORD'] = 'oghn uehu vnpl grfe'  # Replace with your Gmail a
 app.config['MAIL_DEFAULT_SENDER'] = 'sales.innoelectronics@gmail.com'  # Replace with your Gmail
 
 mail = Mail(app)
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def send_email_async(msg):
+    with app.app_context():
+        try:
+            mail.send(msg)
+            logger.info("Email sent successfully")
+        except Exception as e:
+            logger.error(f"Failed to send email: {str(e)}")
 
 def get_products_from_sheet():
     sheet_id = '12CYpadbOJkj4HUCDTTHflMPHH2sWCqJ8-6x8X8pZbUs'
@@ -39,7 +53,8 @@ def get_products_from_sheet():
                 'image': row.get('imageUrl', ''),
                 'price': row.get('price', ''),
                 'datasheet': row.get('datasheetUrl', ''),
-                'stock': row.get('stock', '')
+                'stock': row.get('stock', ''),
+                'partcode': row.get('partcode', '')
             })
     return dict(products)
 
@@ -139,12 +154,17 @@ def checkout():
 
         msg = Message('New Order', recipients=['sales.innoelectronics@gmail.com'])
         msg.body = order_details
+        logger.info("Starting checkout process for user: %s", email)
         try:
-            mail.send(msg)
+            # Send email asynchronously
+            thread = threading.Thread(target=send_email_async, args=(msg,))
+            thread.start()
             session.pop('cart', None)
             flash('Order submitted successfully! We will contact you soon.')
+            logger.info("Checkout completed successfully for user: %s", email)
             return redirect(url_for('home'))
         except Exception as e:
+            logger.error("Error during checkout for user %s: %s", email, str(e))
             flash('Error sending email. Please try again.')
             return redirect(url_for('checkout'))
     return render_template('checkout.html')
