@@ -13,12 +13,12 @@ app = Flask(__name__, static_folder='static')
 app.secret_key = 'your_secret_key_here'  # Change this to a secure key
 
 # Flask-Mail configuration
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'sales.innoelectronics@gmail.com'  # Replace with your Gmail
-app.config['MAIL_PASSWORD'] = 'oghn uehu vnpl grfe'  # Replace with your Gmail app password
-app.config['MAIL_DEFAULT_SENDER'] = 'sales.innoelectronics@gmail.com'  # Replace with your Gmail
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'sales.innoelectronics@gmail.com')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'oghn uehu vnpl grfe')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'sales.innoelectronics@gmail.com')
 
 mail = Mail(app)
 
