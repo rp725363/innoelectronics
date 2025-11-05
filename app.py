@@ -4,35 +4,51 @@ import os
 import requests
 import threading
 import logging
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from flask import Flask, render_template, request, session, redirect, url_for, flash, Response
-from flask_mail import Mail, Message
 from collections import defaultdict
 from datetime import datetime
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'your_secret_key_here'  # Change this to a secure key
 
-# Flask-Mail configuration
-app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
-app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
-app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'sales.innoelectronics@gmail.com')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'oghn uehu vnpl grfe')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'sales.innoelectronics@gmail.com')
-
-mail = Mail(app)
+# Email configuration
+MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+MAIL_PORT = int(os.environ.get('MAIL_PORT', 587))
+MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'sales.innoelectronics@gmail.com')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'oghn uehu vnpl grfe')
+MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'sales.innoelectronics@gmail.com')
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def send_email_async(msg):
-    with app.app_context():
-        try:
-            mail.send(msg)
-            logger.info("Email sent successfully")
-        except Exception as e:
-            logger.error(f"Failed to send email: {str(e)}")
+def send_email_async(subject, body, recipients):
+    try:
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = MAIL_DEFAULT_SENDER
+        msg['To'] = ', '.join(recipients)
+        msg['Subject'] = subject
+
+        # Add body to email
+        msg.attach(MIMEText(body, 'plain'))
+
+        # Create SMTP session
+        server = smtplib.SMTP(MAIL_SERVER, MAIL_PORT)
+        if MAIL_USE_TLS:
+            server.starttls()
+        server.login(MAIL_USERNAME, MAIL_PASSWORD)
+        text = msg.as_string()
+        server.sendmail(MAIL_DEFAULT_SENDER, recipients, text)
+        server.quit()
+
+        logger.info("Email sent successfully")
+    except Exception as e:
+        logger.error(f"Failed to send email: {str(e)}")
 
 def get_products_from_sheet():
     sheet_id = '12CYpadbOJkj4HUCDTTHflMPHH2sWCqJ8-6x8X8pZbUs'
@@ -152,12 +168,10 @@ def checkout():
         for item in cart_items:
             order_details += f"- {item['name']} ({item['category']}) - Quantity: {item['quantity']}\n"
 
-        msg = Message('New Order', recipients=['sales.innoelectronics@gmail.com'])
-        msg.body = order_details
         logger.info("Starting checkout process for user: %s", email)
         try:
             # Send email asynchronously
-            thread = threading.Thread(target=send_email_async, args=(msg,))
+            thread = threading.Thread(target=send_email_async, args=('New Order', order_details, ['sales.innoelectronics@gmail.com']))
             thread.start()
             session.pop('cart', None)
             flash('Order submitted successfully! We will contact you soon.')
@@ -233,8 +247,26 @@ sales.innoelectronics@gmail.com
 """
 
     try:
-        mail.send(msg)  # Send to business
-        mail.send(confirmation_msg)  # Send confirmation to customer
+        # Send email to business
+        threading.Thread(target=send_email_async, args=(f'Contact Form: {subject}', email_content, ['sales.innoelectronics@gmail.com'])).start()
+
+        # Send confirmation email to customer
+        confirmation_body = f"""
+Dear {name},
+
+Thank you for contacting Innoelectronics. We have received your message and will get back to you within 24 hours.
+
+Your message details:
+Subject: {subject}
+Message: {message}
+
+Best regards,
+Innoelectronics Team
+sales.innoelectronics@gmail.com
++91 94284 47698
+"""
+        threading.Thread(target=send_email_async, args=('Thank you for contacting Innoelectronics', confirmation_body, [email])).start()
+
         flash('Thank you for your message! We will get back to you soon. A confirmation email has been sent to your inbox.')
     except Exception as e:
         flash('Error sending email. Please try again.')
