@@ -109,7 +109,8 @@ def add_to_cart():
             'description': product['description'],
             'image': product['image'],
             'category': category,
-            'quantity': quantity
+            'quantity': quantity,
+            'partcode': product['partcode']
         }
         if 'cart' not in session:
             session['cart'] = []
@@ -166,7 +167,7 @@ def checkout():
         # Prepare email content
         order_details = f"Order from {name}\nEmail: {email}\nPhone: {phone}\nAddress: {address}\n\nCart Items:\n"
         for item in cart_items:
-            order_details += f"- {item['name']} ({item['category']}) - Quantity: {item['quantity']}\n"
+            order_details += f"- {item['name']} ({item['category']}) - Partcode: {item['partcode']} - Quantity: {item['quantity']}\n"
 
         logger.info("Starting checkout process for user: %s", email)
         try:

@@ -1,8 +1,4 @@
-# TODO: Optimize Checkout Process
+# TODO List for Adding Partcode to Checkout Emails
 
-## Steps to Complete
-
-- [x] Add logging to /checkout route in app.py for debugging email sending delays
-- [x] Make email sending asynchronous using threading to prevent UI blocking
-- [x] Test the changes by submitting a checkout form and verifying quick response
-- [x] Monitor logs for any errors or delays in email sending
+- [x] Update add_to_cart route to include partcode in cart_item
+- [x] Update checkout route to use partcode directly from cart item in email
