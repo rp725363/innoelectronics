@@ -1,4 +1,3 @@
-# TODO List for Adding Partcode to Checkout Emails
+# TODO List
 
-- [x] Update add_to_cart route to include partcode in cart_item
-- [x] Update checkout route to use partcode directly from cart item in email
+- [x] Fix KeyError 'partcode' in checkout route by using item.get('partcode', 'N/A') in app.py
