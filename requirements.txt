@@ -5,6 +5,8 @@ Flask==2.3.3
 requests==2.31.0
 # Flask-Mail (version 0.9.1): An extension for Flask to send emails. Used for sending order confirmations and contact form messages via Gmail SMTP.
 Flask-Mail==0.9.1
+# sendgrid (version 6.10.0): A library for sending emails via SendGrid API. Used as an alternative to SMTP for better compatibility with deployment platforms like Render.
+sendgrid==6.10.0
 
 # Other Components (not pip-installable, for reference)
 # Jinja2: Template engine (built into Flask) for rendering HTML templates (e.g., index.html, product.html, cart.html, etc.).

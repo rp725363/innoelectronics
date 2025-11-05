@@ -8,6 +8,8 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 from flask_mail import Mail, Message
 from collections import defaultdict
 from datetime import datetime
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail as SendGridMail, Email, To, Content
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'your_secret_key_here'  # Change this to a secure key
@@ -29,8 +31,26 @@ logger = logging.getLogger(__name__)
 def send_email_async(msg):
     with app.app_context():
         try:
+            # Try SendGrid first
+            sendgrid_api_key = os.environ.get('SENDGRID_API_KEY')
+            if sendgrid_api_key:
+                sg = SendGridAPIClient(sendgrid_api_key)
+                sg_msg = SendGridMail(
+                    from_email=Email(msg.sender or 'sales.innoelectronics@gmail.com'),
+                    to_emails=[To(email) for email in msg.recipients],
+                    subject=msg.subject,
+                    plain_text_content=Content("text/plain", msg.body)
+                )
+                response = sg.send(sg_msg)
+                if response.status_code == 202:
+                    logger.info("Email sent successfully via SendGrid")
+                    return
+                else:
+                    logger.warning(f"SendGrid failed with status {response.status_code}, falling back to SMTP")
+
+            # Fallback to SMTP
             mail.send(msg)
-            logger.info("Email sent successfully")
+            logger.info("Email sent successfully via SMTP")
         except Exception as e:
             logger.error(f"Failed to send email: {str(e)}")
 
