@@ -34,9 +34,30 @@
       body {
         margin: 0;
         font-family: "Segoe UI", Arial, sans-serif;
-        background: #111;
-        color: #fff;
+        background: #000; /* Matte black background */
+        color: #fff; /* White text */
         overflow-x: hidden;
+        position: relative;
+      }
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="0.5" fill="%231976ff" opacity="0.05"/><circle cx="20" cy="30" r="0.3" fill="%23ffffff" opacity="0.03"/><circle cx="80" cy="70" r="0.4" fill="%231976ff" opacity="0.05"/></svg>')
+          repeat;
+        animation: float 40s infinite linear;
+        z-index: -1;
+      }
+      @keyframes float {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-100px);
+        }
       }
       .container-fluid {
         max-width: 1200px;
@@ -58,7 +79,6 @@
         color: #1976ff !important;
         font-weight: bold;
         font-size: 1.5rem;
-        text-shadow: 0 0 10px #1976ff;
       }
       .navbar-nav .nav-link {
         color: #fff !important;
@@ -67,7 +87,6 @@
       }
       .navbar-nav .nav-link:hover {
         color: #1976ff !important;
-        text-shadow: 0 0 10px #1976ff;
       }
       .hero {
         background: radial-gradient(
@@ -76,12 +95,12 @@
           #15151a 100%
         );
         min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         padding: 120px 2rem 2rem;
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       .hero::before {
         content: "";
@@ -106,32 +125,27 @@
         flex: 1;
         max-width: 50%;
         z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
       }
       .hero h1 {
-        font-size: 3.5rem;
+        font-size: 2.5rem;
         font-weight: bold;
         letter-spacing: 0.1em;
         line-height: 1.1;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         background: linear-gradient(45deg, #1976ff, #00e676, #ff4081);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        text-shadow: 0 0 20px rgba(25, 118, 255, 0.5);
-        animation: glow 2s ease-in-out infinite alternate;
-      }
-      @keyframes glow {
-        from {
-          text-shadow: 0 0 20px rgba(25, 118, 255, 0.5);
-        }
-        to {
-          text-shadow: 0 0 30px rgba(25, 118, 255, 0.8);
-        }
       }
       .hero p {
-        font-size: 1.2rem;
+        font-size: 1rem;
         line-height: 1.6;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         color: #efefefcc;
         max-width: 80%;
       }
@@ -161,7 +175,7 @@
       }
       .hero-image img {
         width: 100%;
-        max-width: 400px;
+        max-width: 300px;
         border-radius: 20px;
         box-shadow: 0 0 40px rgba(25, 118, 255, 0.5);
         animation: pulse 3s ease-in-out infinite;
@@ -184,7 +198,6 @@
         text-align: center;
         margin-bottom: 3rem;
         color: #1976ff;
-        text-shadow: 0 0 10px #1976ff;
       }
       .feature-card {
         background: rgba(30, 30, 30, 0.9);
@@ -204,11 +217,10 @@
         font-size: 3rem;
         margin-bottom: 1rem;
         color: #1976ff;
-        text-shadow: 0 0 10px #1976ff;
       }
       .products {
         padding: 80px 2rem;
-        background: #111;
+        background: #000; /* Matte black background */
       }
       .products h2 {
         text-align: center;
@@ -266,7 +278,6 @@
       }
       .footer h3 {
         color: #1976ff;
-        text-shadow: 0 0 10px #1976ff;
         margin-bottom: 1rem;
         font-weight: bold;
       }
@@ -353,8 +364,8 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
         <a class="navbar-brand" href="/">
           <img
             src="/static/images/innoelectronics_logo_rect.png"
@@ -372,29 +383,12 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link active" href="/">Home</a>
             </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-              >
-                Products
-              </a>
-              <ul class="dropdown-menu">
-                {% for category in products.keys() %}
-                <li>
-                  <a class="dropdown-item" href="/products/{{ category }}"
-                    >{{ category.title() }}</a
-                  >
-                </li>
-                {% endfor %}
-              </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="/products/Resistors">Products</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
             <li class="nav-item">
@@ -404,29 +398,25 @@
               <a class="nav-link" href="/contact">Contact</a>
             </li>
           </ul>
-          <form class="d-flex" action="/search" method="get">
-            <input
-              class="form-control me-2"
-              type="search"
-              name="q"
-              placeholder="Search products..."
-              value="{{ search_query or '' }}"
-            />
-            <button class="btn btn-outline-light" type="submit">Search</button>
-          </form>
         </div>
       </div>
     </nav>
 
     <section class="hero">
-      <div class="container-fluid">
+      <div
+        class="container-fluid"
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        "
+      >
         <div class="hero-content">
           <h1>Innovate with Innoelectronics</h1>
           <p>
             Empower your tech projects with cutting-edge components that drive
             innovation, reliability, and the future of electronics.
           </p>
-          <a href="#features" class="btn-custom">Discover Innovation</a>
         </div>
         <div class="hero-image">
           <img
@@ -485,12 +475,102 @@
           <div class="col-md-4 mb-4">
             <div class="product-card">
               <div class="product-img">
-                <i class="fas fa-microchip fa-3x"></i>
+                {% if 'connectors' in category.lower() %}
+                <img
+                  src="/static/images/connector.png"
+                  alt="Connectors"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'terminal blocks' in category.lower() %}
+                <img
+                  src="/static/images/terminal blocks.png"
+                  alt="Terminal Blocks"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'diode' in category.lower() %}
+                <img
+                  src="/static/images/diode.png"
+                  alt="Diode"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'soldering tools' in category.lower() %}
+                <img
+                  src="/static/images/soldering tools.png"
+                  alt="Soldering Tools"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'testing tools' in category.lower() %}
+                <img
+                  src="/static/images/testing tools.png"
+                  alt="Testing Tools"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'hand tools' in category.lower() %}
+                <img
+                  src="/static/images/hand tools.png"
+                  alt="Hand Tools"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'power tools' in category.lower() %}
+                <img
+                  src="/static/images/power tools.png"
+                  alt="Power Tools"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'cleaning tools' in category.lower() %}
+                <img
+                  src="/static/images/cleaning tools.png"
+                  alt="Cleaning Tools"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'esd equipment' in category.lower() %}
+                <img
+                  src="/static/images/esd equipment.png"
+                  alt="ESD Equipment"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'storage' in category.lower() %}
+                <img
+                  src="/static/images/storage.png"
+                  alt="Storage"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'microcontrollers' in category.lower() %}
+                <img
+                  src="/static/images/microcontrollers.png"
+                  alt="Microcontrollers"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'capacitor' in category.lower() %}
+                <img
+                  src="/static/images/capacitor.png"
+                  alt="Capacitor"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'inductor' in category.lower() %}
+                <img
+                  src="/static/images/inductor.png"
+                  alt="Inductor"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% elif 'transistor' in category.lower() %}
+                <img
+                  src="/static/images/transistor.png"
+                  alt="Transistor"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% else %}
+                <img
+                  src="/static/images/resistor.png"
+                  alt="Resistor"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                {% endif %}
               </div>
               <div class="card-body">
                 <h5 class="card-title">{{ category.title() }}</h5>
-                <p class="card-text">{{ prods|length }} products available</p>
-                <a href="/products/{{ category }}" class="btn btn-custom"
+                <p class="card-text">{{ prods|length }} products</p>
+                <a href="/products/{{ category }}" class="btn btn-primary"
                   >Explore</a
                 >
               </div>
