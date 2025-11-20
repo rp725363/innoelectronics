@@ -383,12 +383,29 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
+          <ul class="navbar-nav me-auto">
             <li class="nav-item">
               <a class="nav-link active" href="/">Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/products/Resistors">Products</a>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                Products
+              </a>
+              <ul class="dropdown-menu">
+                {% for cat in products.keys() %}
+                <li>
+                  <a class="dropdown-item" href="/products/{{ cat }}"
+                    >{{ cat.title() }}</a
+                  >
+                </li>
+                {% endfor %}
+              </ul>
             </li>
             <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
             <li class="nav-item">
@@ -398,6 +415,16 @@
               <a class="nav-link" href="/contact">Contact</a>
             </li>
           </ul>
+          <form class="d-flex" action="/search" method="get">
+            <input
+              class="form-control me-2"
+              type="search"
+              name="q"
+              placeholder="Search products..."
+              value="{{ search_query or '' }}"
+            />
+            <button class="btn btn-outline-light" type="submit">Search</button>
+          </form>
         </div>
       </div>
     </nav>
