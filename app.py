@@ -188,12 +188,15 @@ def checkout():
 def search():
     query = request.args.get('q', '').lower()
     products = get_products_from_sheet()
-    search_results = defaultdict(list)
+    flat_search_results = []
     for category, prods in products.items():
-        for prod in prods:
+        for index, prod in enumerate(prods):
             if query in prod['name'].lower() or query in prod['description'].lower() or query in prod.get('id', '').lower() or query in str(prod).lower():
-                search_results[category].append(prod)
-    return render_template('index.html', products=dict(search_results), search_query=query)
+                result = prod.copy()
+                result['category'] = category
+                result['index'] = index
+                flat_search_results.append(result)
+    return render_template('index.html', flat_search_results=flat_search_results, products={}, search_query=query)
 
 @app.route('/about')
 def about():
