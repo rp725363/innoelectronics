@@ -228,14 +228,8 @@ Message:
 This message was sent from the Innoelectronics contact form.
 """
 
-    # Send email to business
-    msg = Message(f'Contact Form: {subject}', recipients=['sales.innoelectronics@gmail.com'])
-    msg.body = email_content
-
     # Send confirmation email to customer
-    confirmation_msg = Message('Thank you for contacting Innoelectronics',
-                              recipients=[email])
-    confirmation_msg.body = f"""
+    confirmation_body = f"""
 Dear {name},
 
 Thank you for contacting Innoelectronics. We have received your message and will get back to you within 24 hours.
@@ -255,20 +249,6 @@ sales.innoelectronics@gmail.com
         threading.Thread(target=send_email_async, args=(f'Contact Form: {subject}', email_content, ['sales.innoelectronics@gmail.com'])).start()
 
         # Send confirmation email to customer
-        confirmation_body = f"""
-Dear {name},
-
-Thank you for contacting Innoelectronics. We have received your message and will get back to you within 24 hours.
-
-Your message details:
-Subject: {subject}
-Message: {message}
-
-Best regards,
-Innoelectronics Team
-sales.innoelectronics@gmail.com
-+91 94284 47698
-"""
         threading.Thread(target=send_email_async, args=('Thank you for contacting Innoelectronics', confirmation_body, [email])).start()
 
         flash('Thank you for your message! We will get back to you soon. A confirmation email has been sent to your inbox.')
