@@ -47,18 +47,23 @@
 
     <section class="hero">
       <div class="container-fluid">
+        <div class="hero-animation">
+          <div class="floating-component resistor">
+            <i class="fas fa-microchip"></i>
+          </div>
+          <div class="floating-component capacitor">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div class="floating-component transistor">
+            <i class="fas fa-cogs"></i>
+          </div>
+        </div>
         <div class="hero-content">
           <h1>Innovate with Innoelectronics</h1>
           <p>
             Empower your tech projects with cutting-edge components that drive
             innovation, reliability, and the future of electronics.
           </p>
-        </div>
-        <div class="hero-image">
-          <img
-            src="/static/images/hero_optimized.jpg"
-            alt="Electronics Components"
-          />
         </div>
       </div>
     </section>
@@ -101,104 +106,7 @@
           </div>
         </div>
       </div>
-    </section>
 
-    <section class="products">
-      <div class="container">
-        {% if flat_search_results is defined and flat_search_results %}
-        <h2>Search Results for '{{ search_query }}'</h2>
-        <div class="row">
-          {% for product in flat_search_results %}
-          <div class="col-md-4 mb-4">
-            <div class="product-card">
-              <div class="product-img">
-                {% if product.image %}
-                <img
-                  src="{{ product.image }}"
-                  alt="{{ product.name }}"
-                  style="width: 100%; height: 200px; object-fit: cover"
-                />
-                {% else %}
-                <div
-                  class="product-img"
-                  style="
-                    height: 200px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: linear-gradient(45deg, #1976ff, #00e676);
-                    color: white;
-                  "
-                >
-                  No Image
-                </div>
-                {% endif %}
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">{{ product.description }}</p>
-                <p class="card-text">
-                  <strong>Price:</strong> {{ product.price }}
-                </p>
-                <a
-                  href="/product/{{ product.category }}/{{ product.index }}"
-                  class="btn btn-primary"
-                  >View Product</a
-                >
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        {% else %}
-        <h2>Featured Products</h2>
-        <div class="row">
-          {% for category, prods in products.items() %} {% for product in
-          prods[:3] %}
-          <div class="col-md-4 mb-4">
-            <div class="product-card">
-              <div class="product-img">
-                {% if product.image %}
-                <img
-                  src="{{ product.image }}"
-                  alt="{{ product.name }}"
-                  style="width: 100%; height: 200px; object-fit: cover"
-                />
-                {% else %}
-                <div
-                  class="product-img"
-                  style="
-                    height: 200px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: linear-gradient(45deg, #1976ff, #00e676);
-                    color: white;
-                  "
-                >
-                  No Image
-                </div>
-                {% endif %}
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">{{ product.description }}</p>
-                <p class="card-text">
-                  <strong>Price:</strong> {{ product.price }}
-                </p>
-                <a
-                  href="/product/{{ category }}/{{ loop.index0 }}"
-                  class="btn btn-primary"
-                  >View Product</a
-                >
-              </div>
-            </div>
-          </div>
-          {% endfor %} {% endfor %}
-        </div>
-        {% endif %}
-      </div>
-    </section>
 
     <footer class="footer">
       <div class="footer-content">
