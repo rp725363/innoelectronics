@@ -1,1 +1,7 @@
-- [ ] Update templates/\_header.html to change the img src to '/static/images/Logo1.png' and increase height to 60px for better visibility
+# TODO: Align Product Card Elements and Make Buttons Gray
+
+## Tasks to Complete:
+
+- [ ] Change right column alignment from `text-center` to `text-start` in `templates/product.html`
+- [ ] Change "View Datasheet" button class from `btn-outline-secondary` to `btn-secondary` in `templates/product.html`
+- [ ] Verify changes by reviewing the updated file

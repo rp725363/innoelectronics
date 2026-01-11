@@ -12,205 +12,9 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-    <style>
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #000; /* Matte black background */
-        color: #fff; /* White text */
-        overflow-x: hidden;
-        position: relative;
-      }
-      body::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="0.5" fill="%231976ff" opacity="0.05"/><circle cx="20" cy="30" r="0.3" fill="%23ffffff" opacity="0.03"/><circle cx="80" cy="70" r="0.4" fill="%231976ff" opacity="0.05"/></svg>')
-          repeat;
-        animation: float 40s infinite linear;
-        z-index: -1;
-      }
-      @keyframes float {
-        0% {
-          transform: translateY(0);
-        }
-        100% {
-          transform: translateY(-100px);
-        }
-      }
-      .navbar {
-        background: rgba(20, 20, 20, 0.95);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 1rem 2rem;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-        box-shadow: 0 0 20px rgba(25, 118, 255, 0.3);
-      }
-      .navbar-brand {
-        color: #1976ff !important;
-        font-weight: bold;
-        font-size: 1.5rem;
-        text-shadow: 0 0 10px #1976ff;
-      }
-      .navbar-nav .nav-link {
-        color: #fff !important;
-        font-weight: 500;
-        transition: color 0.3s;
-      }
-      .navbar-nav .nav-link:hover {
-        color: #1976ff !important;
-        text-shadow: 0 0 10px #1976ff;
-      }
-      .product-detail {
-        background: rgba(30, 30, 30, 0.9);
-        border-radius: 20px;
-        padding: 3rem;
-        margin: 120px auto 80px;
-        max-width: 900px;
-        box-shadow: 0 0 40px rgba(25, 118, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .product-img {
-        width: 100%;
-        height: 350px;
-        object-fit: cover;
-        border-radius: 15px;
-        box-shadow: 0 0 20px rgba(25, 118, 255, 0.5);
-      }
-      .btn-success {
-        background: linear-gradient(45deg, #00e676, #1976ff);
-        border: none;
-        border-radius: 50px;
-        padding: 0.75rem 1.5rem;
-        transition: all 0.3s;
-        font-weight: 600;
-      }
-      .btn-success:hover {
-        background: linear-gradient(45deg, #00c853, #1556ba);
-        transform: translateY(-3px);
-        box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
-      }
-      .btn-back {
-        background: linear-gradient(45deg, #1976ff, #00bcd4);
-        color: #fff;
-        padding: 0.75rem 1.5rem;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s;
-        box-shadow: 0 0 20px rgba(25, 118, 255, 0.3);
-        border: none;
-        display: inline-block;
-        margin-top: 1rem;
-      }
-      .btn-back:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0 30px rgba(25, 118, 255, 0.6);
-        background: linear-gradient(45deg, #1556ba, #0097a7);
-      }
-      .text-muted {
-        color: #ccc !important;
-      }
-      .footer {
-        background: linear-gradient(
-          135deg,
-          rgba(20, 20, 20, 0.95),
-          rgba(30, 30, 30, 0.95)
-        );
-        color: #fff;
-        padding: 60px 2rem 40px;
-        position: relative;
-        overflow: hidden;
-      }
-      .footer::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="0.5" fill="%231976ff" opacity="0.1"/><circle cx="20" cy="30" r="0.3" fill="%23ff4081" opacity="0.1"/><circle cx="80" cy="70" r="0.4" fill="%2300e676" opacity="0.1"/></svg>')
-          repeat;
-        animation: float 30s infinite linear;
-      }
-      .footer-content {
-        position: relative;
-        z-index: 1;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .footer h3 {
-        color: #1976ff;
-        text-shadow: 0 0 10px #1976ff;
-        margin-bottom: 1rem;
-        font-weight: bold;
-      }
-      .footer p {
-        color: #ccc;
-        line-height: 1.6;
-        margin-bottom: 1.5rem;
-      }
-      .footer-links {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-bottom: 2rem;
-      }
-      .footer-links a {
-        color: #fff;
-        text-decoration: none;
-        margin: 0 1rem 0.5rem;
-        font-weight: 500;
-        transition: all 0.3s;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.1);
-      }
-      .footer-links a:hover {
-        color: #1976ff;
-        background: rgba(25, 118, 255, 0.2);
-        transform: translateY(-2px);
-        box-shadow: 0 0 10px rgba(25, 118, 255, 0.3);
-      }
-      .social-icons {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 2rem;
-      }
-      .social-icons a {
-        color: #1976ff;
-        font-size: 1.5rem;
-        margin: 0 1rem;
-        transition: all 0.3s;
-        padding: 0.5rem;
-        border-radius: 50%;
-        background: rgba(25, 118, 255, 0.1);
-      }
-      .social-icons a:hover {
-        color: #00e676;
-        background: rgba(0, 230, 118, 0.2);
-        transform: scale(1.1);
-        box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
-      }
-      .footer-bottom {
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding-top: 2rem;
-        text-align: center;
-        color: #888;
-      }
-      .footer-bottom p {
-        margin: 0;
-        font-size: 0.9rem;
-      }
-    </style>
+    <link rel="stylesheet" href="/static/css/styles.css" />
   </head>
-  <body>
+  <body class="homepage">
     {% include '_header.html' %}
 
     <div class="container">
@@ -226,38 +30,20 @@
             {% else %}
             <div
               class="product-img bg-light d-flex align-items-center justify-content-center"
-              style="
-                background: linear-gradient(45deg, #1976ff, #00e676);
-                color: #fff;
-              "
             >
               <span>{{ category.title() }}</span>
             </div>
             {% endif %}
           </div>
-          <div class="col-md-6">
-            <h1
-              class="mb-3"
-              style="
-                color: #1976ff;
-                text-shadow: 0 1px 0 #000, 0 2px 0 #000, 0 3px 0 #000,
-                  0 4px 0 #000, 0 5px 10px rgba(25, 118, 255, 0.5);
-                font-weight: bold;
-                animation: glow 3s ease-in-out infinite alternate;
-              "
-            >
-              {{ product.name }}
-            </h1>
+          <div class="col-md-6 text-center">
+            <h1 class="mb-3">{{ product.name }}</h1>
             <p class="text-muted mb-3">Category: {{ category.title() }}</p>
             {% if product.id %}
             <p class="text-muted mb-3">Product ID: {{ product.id }}</p>
             {% endif %} {% if product.partcode %}
             <p class="text-muted mb-3">Part Code: {{ product.partcode }}</p>
             {% endif %} {% if product.price %}
-            <p
-              class="mb-3"
-              style="font-size: 1.5rem; font-weight: bold; color: #00e676"
-            >
+            <p class="mb-3" style="font-size: 1.5rem; font-weight: bold">
               Price: ₹{{ product.price }}
             </p>
             {% endif %}
@@ -265,7 +51,6 @@
               class="mb-4"
               style="
                 font-size: 0.9rem;
-                color: #ccc;
                 word-wrap: break-word;
                 overflow-wrap: break-word;
               "
@@ -277,44 +62,31 @@
               <a
                 href="{{ product.datasheet }}"
                 target="_blank"
-                class="btn btn-outline-light btn-sm"
+                class="btn btn-outline-secondary btn-sm"
                 >View Datasheet</a
               >
             </p>
             {% endif %} {% if product.stock %}
-            <p class="mb-3" style="color: #00e676">
-              Stock: {{ product.stock }}
-            </p>
+            <p class="mb-3">Stock: {{ product.stock }}</p>
             {% endif %}
             <form action="/add_to_cart" method="post" class="d-inline">
               <input type="hidden" name="category" value="{{ category }}" />
               <input type="hidden" name="index" value="{{ index }}" />
               <div class="input-group me-2" style="width: 150px">
-                <span
-                  class="input-group-text"
-                  style="
-                    background: rgba(30, 30, 30, 0.9);
-                    color: #fff;
-                    border-color: rgba(255, 255, 255, 0.1);
-                  "
-                  >Qty</span
-                >
+                <span class="input-group-text">Qty</span>
                 <input
                   type="number"
                   name="quantity"
                   class="form-control"
                   value="1"
                   min="1"
-                  style="
-                    background: rgba(30, 30, 30, 0.9);
-                    color: #fff;
-                    border-color: rgba(255, 255, 255, 0.1);
-                  "
                 />
               </div>
-              <button type="submit" class="btn btn-success">Add to Cart</button>
+              <button type="submit" class="btn btn-secondary">
+                Add to Cart
+              </button>
             </form>
-            <a href="/products/{{ category }}" class="btn-back"
+            <a href="/products/{{ category }}" class="btn btn-secondary"
               >Back to Products</a
             >
           </div>
