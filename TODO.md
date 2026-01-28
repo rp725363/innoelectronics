@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Product Details Page Fixes
 
 ## Completed Tasks
@@ -10,3 +11,12 @@
 - [ ] Test the product details page to ensure image alignment and content placement are improved.
 - [ ] Verify responsiveness on different screen sizes.
 - [ ] If issues persist, gather more specific feedback from user.
+=======
+# TODO: Align Product Card Elements and Make Buttons Gray
+
+## Tasks to Complete:
+
+- [ ] Change right column alignment from `text-center` to `text-start` in `templates/product.html`
+- [ ] Change "View Datasheet" button class from `btn-outline-secondary` to `btn-secondary` in `templates/product.html`
+- [ ] Verify changes by reviewing the updated file
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6

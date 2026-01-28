@@ -63,7 +63,11 @@ def get_products_from_sheet():
         category = row.get('catogary', '').strip()
         if category:
             products[category].append({
+<<<<<<< HEAD
                 'sku': row.get('SKU', ''),
+=======
+                'id': row.get('id', ''),
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
                 'name': row.get('name', ''),
                 'description': row.get('Description', ''),
                 'image': row.get('imageUrl', ''),
@@ -77,6 +81,7 @@ def get_products_from_sheet():
 @app.route('/')
 def home():
     products = get_products_from_sheet()
+<<<<<<< HEAD
     # Navigation menu data
     dropdown_data = {
         "Products": {
@@ -87,6 +92,9 @@ def home():
         }
     }
     return render_template('index.html', products=products, dropdown_data=dropdown_data)
+=======
+    return render_template('index.html', products=products)
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 
 @app.route('/products/<category>')
 def category_page(category):
@@ -139,8 +147,12 @@ def add_to_cart():
 @app.route('/cart')
 def cart():
     cart_items = session.get('cart', [])
+<<<<<<< HEAD
     products = get_products_from_sheet()
     return render_template('cart.html', cart_items=cart_items, products=products)
+=======
+    return render_template('cart.html', cart_items=cart_items)
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
@@ -192,8 +204,12 @@ def checkout():
             logger.error("Error during checkout for user %s: %s", email, str(e))
             flash('Error sending email. Please try again.')
             return redirect(url_for('checkout'))
+<<<<<<< HEAD
     products = get_products_from_sheet()
     return render_template('checkout.html', products=products)
+=======
+    return render_template('checkout.html')
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 
 @app.route('/search')
 def search():
@@ -202,7 +218,11 @@ def search():
     flat_search_results = []
     for category, prods in products.items():
         for index, prod in enumerate(prods):
+<<<<<<< HEAD
             if query in prod['name'].lower() or query in prod['description'].lower() or query in prod.get('sku', '').lower() or query in str(prod).lower():
+=======
+            if query in prod['name'].lower() or query in prod['description'].lower() or query in prod.get('id', '').lower() or query in str(prod).lower():
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
                 result = prod.copy()
                 result['category'] = category
                 result['index'] = index
@@ -215,8 +235,12 @@ def about():
 
 @app.route('/contact')
 def contact():
+<<<<<<< HEAD
     products = get_products_from_sheet()
     return render_template('contact.html', products=products)
+=======
+    return render_template('contact.html')
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 
 @app.route('/send_message', methods=['POST'])
 def send_message():

@@ -27,11 +27,18 @@
             id="navbarDropdown"
             role="button"
             data-bs-toggle="dropdown"
+<<<<<<< HEAD
             aria-expanded="false"
           >
             <i class="fas fa-box"></i> Products
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+=======
+          >
+            <i class="fas fa-boxes"></i> Products
+          </a>
+          <ul class="dropdown-menu">
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
             {% set menu_products = (all_products if (all_products is defined)
             else (products if (products is defined) else {})) %} {% for cat in
             menu_products.keys() %}
@@ -76,5 +83,8 @@
     </div>
   </div>
 </nav>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6

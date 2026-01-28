@@ -75,6 +75,7 @@ p {
   color: #000 !important;
 }
 
+<<<<<<< HEAD
 /* Initially hidden */
 .dropdown-menu {
     background: hsl(42, 9%, 73%);
@@ -114,6 +115,13 @@ p {
 
 
 
+=======
+.dropdown-menu {
+  background: #fff;
+  border: 1px solid #000;
+}
+
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 .dropdown-item {
   color: #000 !important;
 }
@@ -241,6 +249,7 @@ p {
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+<<<<<<< HEAD
 }
 
 .row.align-items-center .col-md-6 {
@@ -254,6 +263,9 @@ p {
   object-fit: cover;
   border-radius: 10px;
   border: 1px solid #000;
+=======
+  color: #000;
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 }
 
 /* Footer */
@@ -470,13 +482,18 @@ p {
   background: #fff;
   border-radius: 20px;
   padding: 2.4rem;
+<<<<<<< HEAD
   margin: 64px auto;
   padding-top: 120px;
+=======
+  margin: 96px auto 64px;
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
   max-width: 900px;
   box-shadow: 0 0 32px rgba(0, 0, 0, 0.1);
   border: 1px solid #000;
 }
 
+<<<<<<< HEAD
 .product-detail .col-md-6:last-child {
   display: flex;
   flex-direction: column;
@@ -516,6 +533,8 @@ p {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
+=======
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 .cart-container {
   background: #fff;
   border: 1px solid #000;
@@ -798,8 +817,11 @@ p {
   .hero h1 {
     font-size: 2rem;
   }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
 }
 
 /* Homepage specific styles for colorful symbols */
