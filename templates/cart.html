@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart - Innoelectronics</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    {% include '_header.html' %}
+
+    <div class="collapse" id="categoriesMenu">
+      <div class="container">
+        <ul class="horizontal-menu">
+          {% set menu_products = (all_products if (all_products is defined)
+          else (products if (products is defined) else {})) %} {% for cat in
+          menu_products.keys() %}
+          <li>
+            <a class="nav-link" href="/products/{{ cat }}"
+              >{{ cat.title() }}</a
+            >
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="cart-container">
+        <h1 class="mb-4">Your Cart</h1>
+        {% if cart_items %}
+        <div class="row">
+          <div class="col-md-8">
+            {% for item in cart_items %}
+            <div class="cart-item">
+              <div class="row align-items-center">
+                <div class="col-md-2">
+                  {% if item.image %}
+                  <img
+                    src="{{ item.image }}"
+                    alt="{{ item.name }}"
+                    class="cart-img"
+                  />
+                  {% else %}
+                  <div
+                    class="cart-img bg-light d-flex align-items-center justify-content-center"
+                  >
+                    <span class="text-muted">{{ item.category.title() }}</span>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <h5>{{ item.name }}</h5>
+                  <p class="text-muted">{{ item.description }}</p>
+                  <small class="text-muted"
+                    >Category: {{ item.category.title() }}</small
+                  >
+                </div>
+                <div class="col-md-4 text-end">
+                  <div class="d-flex align-items-center justify-content-end">
+                    <form
+                      action="/update_cart"
+                      method="post"
+                      class="d-inline me-2"
+                    >
+                      <input type="hidden" name="action" value="decrease" />
+                      <input
+                        type="hidden"
+                        name="item_index"
+                        value="{{ loop.index0 }}"
+                      />
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-secondary"
+                      >
+                        -
+                      </button>
+                    </form>
+                    <span class="me-2">Qty: {{ item.quantity }}</span>
+                    <form
+                      action="/update_cart"
+                      method="post"
+                      class="d-inline me-2"
+                    >
+                      <input type="hidden" name="action" value="increase" />
+                      <input
+                        type="hidden"
+                        name="item_index"
+                        value="{{ loop.index0 }}"
+                      />
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-secondary"
+                      >
+                        +
+                      </button>
+                    </form>
+                    <form action="/update_cart" method="post" class="d-inline">
+                      <input type="hidden" name="action" value="remove" />
+                      <input
+                        type="hidden"
+                        name="item_index"
+                        value="{{ loop.index0 }}"
+                      />
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-danger"
+                      >
+                        Remove
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Order Summary</h5>
+                <p class="card-text">Total Items: {{ cart_items|length }}</p>
+                <a href="/checkout" class="btn btn-checkout w-100"
+                  >Proceed to Checkout</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <p class="text-center">Your cart is empty.</p>
+        <div class="text-center">
+          <a href="/" class="btn btn-back">Continue Shopping</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

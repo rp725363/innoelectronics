@@ -1,0 +1,17 @@
+# Core Framework and Libraries
+# Flask (version 2.3.3): A lightweight WSGI web application framework for Python. Used for routing, rendering templates, handling sessions, and managing the web application structure.
+Flask==2.3.3
+# requests (version 2.31.0): A Python library for making HTTP requests. Used to fetch product data from Google Sheets via CSV export.
+requests==2.31.0
+# Flask-Mail (version 0.9.1): An extension for Flask to send emails. Used for sending order confirmations and contact form messages via Gmail SMTP.
+Flask-Mail==0.9.1
+
+# Other Components (not pip-installable, for reference)
+# Jinja2: Template engine (built into Flask) for rendering HTML templates (e.g., index.html, product.html, cart.html, etc.).
+# Google Sheets API: External service accessed via HTTP requests to retrieve product data in CSV format. No specific library version; relies on public CSV export URLs.
+# Gmail SMTP: Used for email sending (configured in Flask-Mail). Server: smtp.gmail.com, Port: 587, TLS enabled. Requires app password for authentication.
+# HTML/CSS/JavaScript: Frontend technologies for templates and static files (no specific versions or libraries listed in dependencies; assumed standard web technologies).
+
+# Development Tools (not pip-installable, for reference)
+# Python: The runtime environment (version not specified in files, but implied as compatible with Flask 2.3.3, likely Python 3.8+).
+# pip: Package manager for installing dependencies from requirements.txt (no version specified).

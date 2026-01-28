@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Innoelectronics</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body class="homepage">
+    {% include '_header.html' %}
+
+    <section class="contact-hero">
+      <div class="container">
+        <h1 class="display-4 mb-4">Contact Us</h1>
+        <p class="lead">Get in Touch with Our Expert Team</p>
+      </div>
+    </section>
+
+    <section class="contact-content">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">We're Here to Help</h2>
+            <p class="lead">
+              Whether you need technical support, have questions about our
+              products, or want to discuss bulk orders, our team is ready to
+              assist you. Reach out to us through any of the channels below.
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="contact-form">
+              <h3 class="mb-4">Send us a Message</h3>
+              <form action="/send_message" method="post">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      name="name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      name="email"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="subject" class="form-label">Subject</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="subject"
+                    name="subject"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="message" class="form-label">Message</label>
+                  <textarea
+                    class="form-control"
+                    id="message"
+                    name="message"
+                    rows="5"
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn btn-send btn-lg">
+                  Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="contact-info">
+              <h3 class="mb-4">Contact Information</h3>
+
+              <div class="mb-4">
+                <div class="contact-icon">📍</div>
+                <h5>Address</h5>
+                <p>B-46 Karamjot society, vadodara, Gujarat 390021</p>
+              </div>
+
+              <div class="mb-4">
+                <div class="contact-icon">📞</div>
+                <h5>Phone</h5>
+                <p>+91 94284 47698</p>
+              </div>
+
+              <div class="mb-4">
+                <div class="contact-icon">✉️</div>
+                <h5>Email</h5>
+                <p>sales.innoelectronics@gmail.com</p>
+              </div>
+
+              <div class="mb-4">
+                <div class="contact-icon">🕒</div>
+                <h5>Business Hours</h5>
+                <p>
+                  Monday - Friday: 9:00 AM - 6:00 PM<br />
+                  Saturday: 10:00 AM - 4:00 PM<br />
+                  Sunday: Closed
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-container">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3172.3325395304414!2d-122.08424968467422!3d37.334635779845975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb596e9e188fd%3A0x3b0d8391510688f0!2sApple%20Park!5e0!3m2!1sen!2sus!4v1697123456789!5m2!1sen!2sus"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          >
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="row">
+          <div class="col-md-4">
+            <h3>Innoelectronics</h3>
+            <p>
+              Your trusted partner for cutting-edge electronics components.
+              Empowering innovation with quality, reliability, and expertise.
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h4>Quick Links</h4>
+            <div class="footer-links">
+              <a href="/">Home</a>
+              <a href="/about">About</a>
+              <a href="/contact">Contact</a>
+              <a href="/cart">Cart</a>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h4>Follow Us</h4>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2023 Innoelectronics. All rights reserved. | Designed with
+            <i class="fas fa-heart" style="color: #ff4081"></i> for innovation
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

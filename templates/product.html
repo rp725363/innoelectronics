@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ product.name }} - Innoelectronics</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    {% include '_header.html' %}
+
+    <section class="product-detail">
+      <div class="container">
+        <a href="/products/{{ category }}" class="appealing-btn">← Back to {{ category.title() }}</a>
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <div class="product-img">
+              {% if product.image %}
+              <img
+                src="{{ product.image }}"
+                alt="{{ product.name }}"
+                style="width: 100%; height: 400px; object-fit: cover"
+              />
+              {% else %}
+              <div
+                class="product-img"
+                style="
+                  height: 400px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  background: linear-gradient(45deg, #1976ff, #00e676);
+                  color: white;
+                "
+              >
+                No Image
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            {% if product.sku %}
+            <p class="sku-label mb-3">
+              SKU: {{ product.sku }}
+            </p>
+            {% endif %}
+            <p class="card-text">{{ product.description }}</p>
+            {% if product.price %}
+            <p class="h4 mb-3" style="color: #000">Price: ${{ product.price }}</p>
+            {% endif %}
+            {% if product.stock %}
+            <p class="mb-3" style="color: #000">Stock: {{ product.stock }}</p>
+            {% endif %}
+            {% if product.partcode %}
+            <p class="mb-3" style="color: #000">Part Code: {{ product.partcode }}</p>
+            {% endif %}
+            {% if product.datasheet %}
+            <a
+              href="{{ product.datasheet }}"
+              class="appealing-btn mb-3"
+              target="_blank"
+              >View Datasheet</a
+            >
+            {% endif %}
+            <form action="/add_to_cart" method="post">
+              <input type="hidden" name="category" value="{{ category }}" />
+              <input type="hidden" name="index" value="{{ index }}" />
+              <div class="mb-3">
+                <label for="quantity" class="form-label">Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  class="form-control"
+                  style="width: 100px"
+                />
+              </div>
+              <button type="submit" class="appealing-btn">Add to Cart</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="row">
+          <div class="col-md-4">
+            <h3>Innoelectronics</h3>
+            <p>
+              Your trusted partner for cutting-edge electronics components.
+              Empowering innovation with quality, reliability, and expertise.
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h4>Quick Links</h4>
+            <div class="footer-links">
+              <a href="/">Home</a>
+              <a href="/about">About</a>
+              <a href="/contact">Contact</a>
+              <a href="/cart">Cart</a>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h4>Follow Us</h4>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2023 Innoelectronics. All rights reserved. | Designed with
+            <i class="fas fa-heart" style="color: #ff4081"></i> for innovation
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
