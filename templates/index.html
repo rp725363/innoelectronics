@@ -7,6 +7,15 @@
       name="google-site-verification"
       content="edg1H-SZVXHf6QfwwttGNauj9VBl7EZzmnrrdzU4EnQ"
     />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C9C6YFLP19"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-C9C6YFLP19');
+    </script>
     <!-- Google Tag Manager -->
     <script>
       (function (w, d, s, l, i) {
@@ -51,10 +60,9 @@
       <div class="container">
         <h2>Search Results for "{{ search_query }}"</h2>
         {% if flat_search_results %}
-        <div class="row justify-content-center">
+        <div class="search-grid">
           {% for product in flat_search_results %}
-          <div class="col-md-3 mb-4">
-            <div class="product-card">
+          <div class="product-card">
               <div class="product-img">
                 {% if product.image %}
                 <img
