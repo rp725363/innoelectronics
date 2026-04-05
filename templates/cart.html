@@ -23,25 +23,6 @@
   <body>
     {% include '_header.html' %}
 
-<<<<<<< HEAD
-    <div class="collapse" id="categoriesMenu">
-      <div class="container">
-        <ul class="horizontal-menu">
-          {% set menu_products = (all_products if (all_products is defined)
-          else (products if (products is defined) else {})) %} {% for cat in
-          menu_products.keys() %}
-          <li>
-            <a class="nav-link" href="/products/{{ cat }}"
-              >{{ cat.title() }}</a
-            >
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-
-=======
->>>>>>> 35e698eee982a4a716de79a012e0a69bd5e834d6
     <div class="container">
       <div class="cart-container">
         <h1 class="mb-4">Your Cart</h1>

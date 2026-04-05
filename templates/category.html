@@ -3,13 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C9C6YFLP19"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-C9C6YFLP19');
     </script>
     <title>{{ category.title() }} - Innoelectronics</title>
@@ -29,93 +27,138 @@
 
     <section class="products">
       <div class="container">
-        <a href="/" class="btn-back">← Back to Home</a>
-        <h2>{{ category.title() }}</h2>
-        <div class="row">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/products">Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ category.title() }}</li>
+          </ol>
+        </nav>
+        <div class="page-controls">
+          <button type="button" class="filter-toggle" onclick="toggleFilters()"><i class="fas fa-filter"></i> Filter</button>
+          <form method="get" class="sort-form">
+            {% for b in request.args.getlist('brand') %}
+            <input type="hidden" name="brand" value="{{ b }}">
+            {% endfor %}
+            {% for t in request.args.getlist('type') %}
+            <input type="hidden" name="type" value="{{ t }}">
+            {% endfor %}
+            {% for pin in request.args.getlist('pins') %}
+            <input type="hidden" name="pins" value="{{ pin }}">
+            {% endfor %}
+            <select name="sort" class="sort-select" aria-label="Sort products" onchange="this.form.submit()">
+              <option value="">Sort by...</option>
+              <option value="price_low" {% if request.args.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+              <option value="price_high" {% if request.args.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+              <option value="newest" {% if request.args.sort == 'newest' %}selected{% endif %}>Newest First</option>
+            </select>
+          </form>
+        </div>
+        <form method="get" class="filter-form">
+          <input type="hidden" name="sort" value="{{ request.args.sort or '' }}">
+          <div class="filter-sidebar" id="filterSidebar">
+            <div class="filter-group">
+              <h5>Brand</h5>
+              <div class="filter-checkboxes">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="brand" value="Molex" {% if 'Molex' in request.args.getlist('brand') %}checked{% endif %}> Molex
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="brand" value="JST" {% if 'JST' in request.args.getlist('brand') %}checked{% endif %}> JST
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="brand" value="TE Connectivity" {% if 'TE Connectivity' in request.args.getlist('brand') %}checked{% endif %}> TE Connectivity
+                </label>
+              </div>
+            </div>
+            <div class="filter-group">
+              <h5>Type</h5>
+              <div class="filter-checkboxes">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="type" value="Connector" {% if 'Connector' in request.args.getlist('type') %}checked{% endif %}> Connector
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="type" value="Header" {% if 'Header' in request.args.getlist('type') %}checked{% endif %}> Header
+                </label>
+              </div>
+            </div>
+            <div class="filter-group">
+              <h5>Pin Count</h5>
+              <div class="filter-checkboxes">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="pins" value="2" {% if '2' in request.args.getlist('pins') %}checked{% endif %}> 2 Pins
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="pins" value="3" {% if '3' in request.args.getlist('pins') %}checked{% endif %}> 3 Pins
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="pins" value="4+" {% if '4+' in request.args.getlist('pins') %}checked{% endif %}> 4+ Pins
+                </label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+          </div>
+        </form>
+        <div class="row products-grid g-4">
           {% for product in products %}
-          <div class="col-md-3 mb-4">
-            <div class="product-card">
+          <div class="col-6 col-lg-4 col-xl-3 d-flex">
+            <div class="product-card product-card--catalog w-100">
               <div class="product-img">
                 {% if product.image %}
                 <img
                   src="{{ product.image }}"
                   alt="{{ product.name }}"
-                  style="width: 100%; height: 200px; object-fit: cover"
+                  loading="lazy"
+                  decoding="async"
                 />
                 {% else %}
-                <div
-                  class="product-img"
-                  style="
-                    height: 200px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: linear-gradient(45deg, #1976ff, #00e676);
-                    color: white;
-                  "
-                >
-                  No Image
+                <div class="product-card__placeholder" role="img" aria-label="No product photo">
+                  <i class="fas fa-microchip" aria-hidden="true"></i>
+                  <span>No photo yet</span>
                 </div>
                 {% endif %}
               </div>
               <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
+                {% if product.sku %}
+                <p class="product-card__sku"><span class="product-card__sku-label">SKU</span> {{ product.sku }}</p>
+                {% endif %}
+                {% if product.price %}
+                <div class="price-tag">₹{{ product.price }}</div>
+                {% endif %}
                 {% if product.id %}
-                <p class="text-muted small mb-1" style="color: #ccc !important">
-                  ID: {{ product.id }}
-                </p>
+                <p class="text-muted small mb-0">ID: {{ product.id }}</p>
+                {% endif %}
+                {% if product.stock %}
+                <span class="stock-badge {% if product.stock != '0' and product.stock|int > 0 %}stock-in{% else %}stock-out{% endif %}">
+                  {% if product.stock != '0' and product.stock|int > 0 %}In stock{% else %}Out of stock{% endif %}
+                </span>
                 {% endif %}
                 <a
-                  href="/product/{{ category }}/{{ loop.index0 }}"
+                  href="/product/{{ category }}/{{ product.sheet_index }}"
                   class="btn btn-primary"
-                  >View Details</a
+                  >View details</a
                 >
               </div>
             </div>
           </div>
           {% endfor %}
         </div>
+        <div class="filter-overlay" id="filterOverlay" onclick="toggleFilters()"></div>
       </div>
     </section>
 
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="row">
-          <div class="col-md-4">
-            <h3>Innoelectronics</h3>
-            <p>
-              Your trusted partner for cutting-edge electronics components.
-              Empowering innovation with quality, reliability, and expertise.
-            </p>
-          </div>
-          <div class="col-md-4">
-            <h4>Quick Links</h4>
-            <div class="footer-links">
-              <a href="/">Home</a>
-              <a href="/about">About</a>
-              <a href="/contact">Contact</a>
-              <a href="/cart">Cart</a>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <h4>Follow Us</h4>
-            <div class="social-icons">
-              <a href="#"><i class="fab fa-facebook"></i></a>
-              <a href="#"><i class="fab fa-twitter"></i></a>
-              <a href="#"><i class="fab fa-linkedin"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>
-            &copy; 2023 Innoelectronics. All rights reserved. | Designed with
-            <i class="fas fa-heart" style="color: #ff4081"></i> for innovation
-          </p>
-        </div>
-      </div>
-    </footer>
+    {% include '_footer.html' %}
 
+    <script>
+      function toggleFilters() {
+        const sidebar = document.getElementById('filterSidebar');
+        const overlay = document.getElementById('filterOverlay');
+        if (!sidebar) return;
+        sidebar.classList.toggle('active');
+        if (overlay) overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+      }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

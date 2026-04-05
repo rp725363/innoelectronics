@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ product.name }}{% if product.partcode %} | {{ product.partcode }}{% endif %} | {{ category.replace('-', ' ').title() }} - Innoelectronics</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/static/css/styles.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/static/css/product-page.css" media="print" onload="this.media='all'">
+  <link rel="preload" href="/static/css/styles.css" as="style">
+  <link rel="preload" href="/static/css/product-page.css" as="style">
+  <link rel="icon" href="/static/images/favicon.png" type="image/png">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="{% if product.description %}{{ product.description[:155] }}...{% else %}{{ product.name }} - Premium quality electronics component from Innoelectronics.{% endif %}">
+  <meta name="keywords" content="{{ product.partcode or product.sku or '' }}, {{ product.name }}, {{ category }}, electronics, {{ product.name.replace(' ', ', ') }}, innoelectronics">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ request.url }}">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{ product.name }} | {{ category.title() }} - Innoelectronics">
+  <meta property="og:description" content="{% if product.description %}{{ product.description[:200] }}{% else %}{{ product.name }} from Innoelectronics{% endif %}">
+  {% if product.image %}
+  <meta property="og:image" content="{{ product.image }}">
+  {% endif %}
+  <meta property="og:url" content="{{ request.url }}">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ product.name }} | Innoelectronics">
+  <meta name="twitter:description" content="{% if product.description %}{{ product.description[:200] }}{% else %}{{ product.name }}{% endif %}">
+  {% if product.image %}
+  <meta name="twitter:image" content="{{ product.image }}">
+  {% endif %}
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "{{ product.name }}",
+    "image": "{% if product.image %}{{ product.image }}{% else %}https://rp725363.pythonanywhere.com/static/images/logo9.png{% endif %}",
+    "description": "{% if product.description %}{{ product.description }}{% else %}High quality {{ product.name }} for electronics projects{% endif %}",
+    "sku": "{{ product.partcode or product.sku or '' }}",
+    "brand": {"@type": "Brand", "name": "Innoelectronics"},
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": "{% if product.price %}{{ product.price }}{% else %}Contact for price{% endif %}",
+      "availability": "{% if product.stock and product.stock != '0' %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+      "seller": {"@type": "Organization", "name": "Innoelectronics"}
+    }
+  }
+  </script>
+</head>
+<body class="product-page">
+  {% include '_header.html' %}
+
+  <main id="main-content" role="main" class="product-hero">
+    <div class="container">
+      <a href="/products/{{ category }}" class="btn-back mb-4">
+        <i class="fas fa-arrow-left me-2"></i>Back to Category
+      </a>
+      
+      <div class="product-grid">
+        <!-- Image Section -->
+        <div class="product-image-section">
+          <div class="product-image-frame">
+            {% if product.image %}
+              <img src="{{ product.image }}" alt="{{ product.name }} - {{ category.title() }} product image" 
+                   class="product-main-img" loading="lazy">
+            {% else %}
+              <div class="no-image-placeholder" role="img" aria-label="No image available for {{ category.title() }}">
+                <i class="fas fa-image fa-4x mb-3"></i>
+                <h5>{{ category.title() }}</h5>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        
+        <!-- Details Section -->
+        <div class="product-details">
+          <h1 class="product-title">{{ product.name }}</h1>
+          
+          <div class="category-info">Category: <strong>{{ category.title() }}</strong></div>
+          
+          {% if product.partcode %}
+            <div class="spec-item">
+              <i class="fas fa-barcode"></i> {{ product.partcode }}
+            </div>
+          {% endif %}
+          
+          {% if product.price %}
+            <div class="product-price">₹{{ product.price }}</div>
+          {% endif %}
+          
+          {% if product.description %}
+            <div class="product-description">{{ product.description }}</div>
+          {% endif %}
+          
+          {% if product.stock %}
+            <div class="stock-badge">
+              <i class="fas fa-warehouse"></i> In Stock: {{ product.stock }}
+            </div>
+          {% endif %}
+          
+          <div class="action-section">
+            {% if product.datasheet %}
+              <a href="{{ product.datasheet }}" target="_blank" class="btn-datasheet">
+                <i class="fas fa-file-pdf me-2"></i>Datasheet
+              </a>
+            {% endif %}
+            
+            <form action="/add_to_cart" method="post" class="add-to-cart-form">
+              <input type="hidden" name="category" value="{{ category }}">
+              <input type="hidden" name="index" value="{{ index }}">
+              
+              <div class="quantity-section">
+                <label class="quantity-label">Quantity</label>
+                <div class="quantity-input-group">
+                  <button type="button" class="qty-btn" onclick="qtyChange(-1)" aria-label="Decrease quantity" tabindex="0">
+                    -
+                  </button>
+                  <input type="number" class="qty-input" name="quantity" value="1" min="1" 
+                         aria-label="Product quantity" tabindex="0">
+                  <button type="button" class="qty-btn" onclick="qtyChange(1)" aria-label="Increase quantity" tabindex="0">
+                    +
+                  </button>
+                </div>
+              </div>
+              
+              <button type="submit" class="btn-add-cart">
+                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  {% include '_footer.html' %}
+
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function qtyChange(change) {
+      const input = document.querySelector('input[name="quantity"]');
+      let val = parseInt(input.value) + change;
+      if (val < 1) val = 1;
+      input.value = val;
+    }
+  </script>
+</body>
+</html>

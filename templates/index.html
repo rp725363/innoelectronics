@@ -27,7 +27,7 @@
         j.async = true;
         j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
         f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "G-C9C6YFLP19");
+      })(window, document, "script", "dataLayer", "GTM-PNRDPX8Q");
     </script>
     <!-- End Google Tag Manager -->
     <title>Innoelectronics</title>
@@ -62,40 +62,42 @@
         {% if flat_search_results %}
         <div class="search-grid">
           {% for product in flat_search_results %}
-          <div class="product-card">
+          <div class="product-card product-card--catalog h-100">
               <div class="product-img">
                 {% if product.image %}
                 <img
                   src="{{ product.image }}"
                   alt="{{ product.name }}"
-                  style="width: 100%; height: 200px; object-fit: cover"
+                  loading="lazy"
+                  decoding="async"
                 />
                 {% else %}
-                <div
-                  class="product-img"
-                  style="
-                    height: 200px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: linear-gradient(45deg, #1976ff, #00e676);
-                    color: white;
-                  "
-                >
-                  No Image
+                <div class="product-card__placeholder" role="img" aria-label="No product photo">
+                  <i class="fas fa-microchip" aria-hidden="true"></i>
+                  <span>No photo yet</span>
                 </div>
                 {% endif %}
               </div>
               <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
-                <p class="text-muted small mb-1">{{ product.category }}</p>
+                {% if product.sku %}
+                <p class="product-card__sku"><span class="product-card__sku-label">SKU</span> {{ product.sku }}</p>
+                {% endif %}
+                {% if product.price %}
+                <div class="price-tag">₹{{ product.price }}</div>
+                {% endif %}
+                <p class="text-muted small mb-0">{{ product.category }}</p>
+                {% if product.stock %}
+                <span class="stock-badge {% if product.stock != '0' and product.stock|int > 0 %}stock-in{% else %}stock-out{% endif %}">
+                  {% if product.stock != '0' and product.stock|int > 0 %}In stock{% else %}Out of stock{% endif %}
+                </span>
+                {% endif %}
                 <a
                   href="/product/{{ product.category }}/{{ product.index }}"
                   class="btn btn-primary"
-                  >View Details</a
+                  >View details</a
                 >
               </div>
-            </div>
           </div>
           {% endfor %}
         </div>
@@ -131,7 +133,11 @@
 
     <section class="features" id="features">
       <div class="container">
-        <h2>Why Choose Innoelectronics?</h2>
+        <div class="section-head">
+          <span class="accent" aria-hidden="true"></span>
+          <h2>Why Choose Innoelectronics?</h2>
+          <p>Quality parts, fair pricing, and support that understands your build.</p>
+        </div>
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-content">
@@ -197,9 +203,13 @@
       </div>
     </section>
 
-    <section class="categories">
+    <section class="categories" id="categories">
       <div class="container">
-        <h2>Product Categories</h2>
+        <div class="section-head">
+          <span class="accent" aria-hidden="true"></span>
+          <h2>Product Categories</h2>
+          <p>From passives to dev boards—everything you need in one place.</p>
+        </div>
         <div class="categories-grid">
           <div class="category-card">
             <div class="category-content">
@@ -259,40 +269,21 @@
     </section>
     {% endif %}
 
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="row">
-          <div class="col-md-4">
-            <h3>Innoelectronics</h3>
-            <p>
-              Your trusted partner for cutting-edge electronics components.
-              Empowering innovation with quality, reliability, and expertise.
-            </p>
-          </div>
-          <div class="col-md-4">
-            <h4>Quick Links</h4>
-            <div class="footer-links">
-              <a href="/">Home</a>
-              <a href="/about">About</a>
-              <a href="/contact">Contact</a>
-              <a href="/cart">Cart</a>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <h4>Follow Us</h4>
-            <div class="social-icons">
-              <a href="#"><i class="fab fa-facebook"></i></a>
-              <a href="#"><i class="fab fa-twitter"></i></a>
-              <a href="#"><i class="fab fa-linkedin"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>2023 Innoelectronics</p>
-        </div>
-      </div>
-    </footer>
+    {% include '_footer.html' %}
+
+    <a href="https://wa.me/919428447698?text=Hi%2C%20I%20have%20a%20query%20about%20your%20products." id="whatsapp-btn" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+      function toggleFilters() {
+        const sidebar = document.getElementById('filterSidebar');
+        const overlay = document.getElementById('filterOverlay');
+        if (!sidebar) return;
+        sidebar.classList.toggle('active');
+        if (overlay) overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+      }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
