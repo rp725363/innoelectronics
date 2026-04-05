@@ -1,6 +1,8 @@
 import csv
 import io
 import os
+import re
+import time
 import requests
 import threading
 import logging
@@ -12,21 +14,32 @@ from collections import defaultdict
 from datetime import datetime
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = 'your_secret_key_here'  # Change this to a secure key
+app.secret_key = os.environ.get('FLASK_SECRET_KEY') or os.environ.get('SECRET_KEY') or 'dev-insecure-change-me'
+
+@app.context_processor
+def inject_now():
+    return {'now': datetime.now()}
 
 # Email configuration
 MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
 MAIL_PORT = int(os.environ.get('MAIL_PORT', 587))
 MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'sales.innoelectronics@gmail.com')
-MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'oghn uehu vnpl grfe')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', '')
 MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'sales.innoelectronics@gmail.com')
+
+_SHEET_CACHE = None
+_SHEET_CACHE_TS = 0.0
+SHEET_CACHE_TTL_SEC = 120
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def send_email_async(subject, body, recipients):
+    if not MAIL_USERNAME or not MAIL_PASSWORD:
+        logger.warning("Email skipped: set MAIL_USERNAME and MAIL_PASSWORD in the environment")
+        return
     try:
         # Create message
         msg = MIMEMultipart()
@@ -51,10 +64,14 @@ def send_email_async(subject, body, recipients):
         logger.error(f"Failed to send email: {str(e)}")
 
 def get_products_from_sheet():
+    global _SHEET_CACHE, _SHEET_CACHE_TS
+    now = time.monotonic()
+    if _SHEET_CACHE is not None and (now - _SHEET_CACHE_TS) < SHEET_CACHE_TTL_SEC:
+        return _SHEET_CACHE
     sheet_id = '12CYpadbOJkj4HUCDTTHflMPHH2sWCqJ8-6x8X8pZbUs'
     sheet_name = 'Products'
     url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-    response = requests.get(url)
+    response = requests.get(url, timeout=30)
     response.raise_for_status()
     csv_data = response.content.decode('utf-8')
     reader = csv.DictReader(io.StringIO(csv_data))
@@ -63,29 +80,117 @@ def get_products_from_sheet():
         category = row.get('catogary', '').strip()
         if category:
             products[category].append({
-                'sku': row.get('SKU', ''),
-                'name': row.get('name', ''),
-                'description': row.get('Description', ''),
-                'image': row.get('imageUrl', ''),
-                'price': row.get('price', ''),
-                'datasheet': row.get('datasheetUrl', ''),
-                'stock': row.get('stock', ''),
-                'partcode': row.get('partcode', '')
+                'sku': (row.get('SKU') or '').strip(),
+                'name': (row.get('name') or '').strip(),
+                'description': (row.get('Description') or '').strip(),
+                'image': (row.get('imageUrl') or '').strip(),
+                'price': (row.get('price') or '').strip(),
+                'datasheet': (row.get('datasheetUrl') or '').strip(),
+                'stock': (row.get('stock') or '').strip(),
+                'partcode': (row.get('partcode') or '').strip()
             })
-    return dict(products)
+    _SHEET_CACHE = dict(products)
+    _SHEET_CACHE_TS = now
+    return _SHEET_CACHE
+
+
+def _parse_price(price_str):
+    if not price_str:
+        return None
+    s = re.sub(r'[^\d.]', '', str(price_str).replace(',', ''))
+    if not s:
+        return None
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def _product_search_text(p):
+    parts = [
+        p.get('name', ''),
+        p.get('description', ''),
+        p.get('partcode', ''),
+        p.get('sku', ''),
+    ]
+    return ' '.join(parts).lower()
+
+
+def _pin_matches(text_lower, spec):
+    if spec == '2':
+        return bool(re.search(r'\b2[\s-]*pins?\b', text_lower)) or bool(re.search(r'\b2p\b', text_lower))
+    if spec == '3':
+        return bool(re.search(r'\b3[\s-]*pins?\b', text_lower)) or bool(re.search(r'\b3p\b', text_lower))
+    if spec == '4+':
+        for m in re.finditer(r'(\d+)[\s-]*pins?\b', text_lower):
+            try:
+                if int(m.group(1)) >= 4:
+                    return True
+            except ValueError:
+                pass
+        return bool(re.search(r'\b(4|5|6|7|8|9|1\d+)\s*[\s-]*pins?\b', text_lower))
+    return False
+
+
+def filter_and_sort_category_items(category_rows, brands, types, pins_filters, sort_opt):
+    """category_rows: list of (sheet_index, product_dict). Returns filtered/sorted copies with sheet_index preserved."""
+    items = []
+    for sheet_index, p in category_rows:
+        text = _product_search_text(p)
+        if brands:
+            if not any(b.lower() in text for b in brands):
+                continue
+        if types:
+            if not any(t.lower() in text for t in types):
+                continue
+        if pins_filters:
+            if not any(_pin_matches(text, pf) for pf in pins_filters):
+                continue
+        row = dict(p)
+        row['sheet_index'] = sheet_index
+        items.append(row)
+
+    if sort_opt == 'price_low':
+        items.sort(key=lambda r: (1, 0) if _parse_price(r.get('price')) is None else (0, _parse_price(r.get('price'))))
+    elif sort_opt == 'price_high':
+        items.sort(key=lambda r: (1, 0) if _parse_price(r.get('price')) is None else (0, -_parse_price(r.get('price'))))
+    elif sort_opt == 'newest':
+        items.reverse()
+
+    return items
+
+
+@app.context_processor
+def inject_nav_catalog():
+    try:
+        return {'all_products': get_products_from_sheet()}
+    except Exception as e:
+        logger.warning("Nav catalog unavailable: %s", e)
+        return {'all_products': {}}
 
 @app.route('/')
 def home():
     products = get_products_from_sheet()
     return render_template('index.html', products=products)
 
+
+@app.route('/products')
+def products_hub():
+    return redirect(url_for('home'))
+
+
 @app.route('/products/<category>')
 def category_page(category):
     products = get_products_from_sheet()
-    if category in products:
-        return render_template('category.html', category=category, products=products[category], all_products=products)
-    else:
+    if category not in products:
         return "Category not found", 404
+    pairs = list(enumerate(products[category]))
+    brands = request.args.getlist('brand')
+    types = request.args.getlist('type')
+    pins_filters = request.args.getlist('pins')
+    sort_opt = (request.args.get('sort') or '').strip()
+    items = filter_and_sort_category_items(pairs, brands, types, pins_filters, sort_opt)
+    return render_template('category.html', category=category, products=items, all_products=products)
 
 @app.route('/product/<category>/<int:index>')
 def product_detail(category, index):
@@ -164,6 +269,10 @@ def checkout():
             flash('Your cart is empty!')
             return redirect(url_for('cart'))
 
+        if not MAIL_USERNAME or not MAIL_PASSWORD:
+            flash('Ordering by email is not configured. Please contact us by phone or WhatsApp.')
+            return redirect(url_for('checkout'))
+
         # Prepare email content
         order_details = f"Order from {name}\nEmail: {email}\nPhone: {phone}\nAddress: {address}\n\nCart Items:\n"
         for item in cart_items:
@@ -212,6 +321,10 @@ def send_message():
     email = request.form.get('email')
     subject = request.form.get('subject')
     message = request.form.get('message')
+
+    if not MAIL_USERNAME or not MAIL_PASSWORD:
+        flash('The contact form cannot send mail right now. Please email sales.innoelectronics@gmail.com directly.')
+        return redirect(url_for('contact'))
 
     # Prepare email content
     email_content = f"""
@@ -283,6 +396,7 @@ def sitemap():
     # Static pages
     static_pages = [
         {'loc': '/', 'priority': '1.0', 'changefreq': 'daily'},
+        {'loc': '/products', 'priority': '0.9', 'changefreq': 'daily'},
         {'loc': '/about', 'priority': '0.8', 'changefreq': 'monthly'},
         {'loc': '/contact', 'priority': '0.8', 'changefreq': 'monthly'},
         {'loc': '/cart', 'priority': '0.5', 'changefreq': 'weekly'},
